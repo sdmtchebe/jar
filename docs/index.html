@@ -20,6 +20,21 @@
       }
 
       * { box-sizing: border-box; }
+    <title>Jarvis Assistant</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #08111f;
+        --panel: #101c2f;
+        --text: #ecf4ff;
+        --muted: #abc1d8;
+        --accent: #6ee7f9;
+        --accent-strong: #38bdf8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
 
       body {
         margin: 0;
@@ -365,5 +380,48 @@
 
       render();
     </script>
+    <main>
+      <section class="hero" aria-labelledby="title">
+        <div>
+          <div class="eyebrow">Human-confirmed AI operations</div>
+          <h1 id="title">Jarvis Assistant</h1>
+          <p>
+            A safe scaffold for a cloud-model Jarvis that can plan multi-agent
+            work, browse the web, prepare file operations, draft communications,
+            and ask for confirmation before taking side effects.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="./README.md">Read the project README</a>
+            <a class="button" href="https://github.com/">View source on GitHub</a>
+          </div>
+        </div>
+        <aside class="card" aria-label="Jarvis safeguards">
+          <ul class="status">
+            <li>Uses cloud OpenAI-compatible model endpoints; no local model runtime required.</li>
+            <li>Limits computer access to configured workspace roots.</li>
+            <li>Requires operator confirmation tokens before side effects.</li>
+            <li>Plans browser, Google Workspace, email, and SMS actions before execution.</li>
+          </ul>
+        </aside>
+      </section>
+      <section class="features" aria-label="Capabilities">
+        <article class="feature">
+          <h2>Multi-agent planning</h2>
+          <p>Splits goals into planner, researcher, browser, file, communication, and workspace tasks.</p>
+        </article>
+        <article class="feature">
+          <h2>Web and browser access</h2>
+          <p>Provides web-fetch support and a confirmation-first browser interaction adapter.</p>
+        </article>
+        <article class="feature">
+          <h2>File operations</h2>
+          <p>Reads and writes files only within allowlisted directories and after approval.</p>
+        </article>
+        <article class="feature">
+          <h2>Messaging workflows</h2>
+          <p>Drafts email and SMS sends for explicit review before provider integrations execute them.</p>
+        </article>
+      </section>
+    </main>
   </body>
 </html>

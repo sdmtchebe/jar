@@ -37,6 +37,12 @@ cd jar
 python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install -e .
+## Quick start
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
 cp .env.example .env
 jarvis --goal "Research a topic and draft a plan"
 ```
