@@ -6,10 +6,12 @@ from .agents import AgentOrchestrator
 from .config import load_config
 from .confirmation import ConfirmationGate
 from .runner import run_sync
+from .terminal import run_terminal_dashboard
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Jarvis human-confirmed AI operations assistant")
+    parser.add_argument("--goal", help="Goal Jarvis should plan. Omit this to open the terminal dashboard.")
     parser.add_argument("--goal", required=True, help="Goal Jarvis should plan")
     parser.add_argument(
         "--execute",
@@ -21,12 +23,22 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Skip cloud model calls and only create a plan/fetch URLs.",
     )
+    parser.add_argument(
+        "--chat",
+        action="store_true",
+        help="Open the interactive terminal dashboard even if other flags are present.",
+    )
     return parser
 
 
 def main() -> None:
     args = build_parser().parse_args()
     config = load_config()
+
+    if args.chat or not args.goal:
+        run_terminal_dashboard(config)
+        return
+
     confirmations = ConfirmationGate(required=config.require_confirmation)
 
     if args.execute:

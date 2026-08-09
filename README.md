@@ -102,6 +102,18 @@ You should see project files such as `pyproject.toml`, `README.md`, `.env.exampl
 - `cp: .env.example: No such file or directory`: you are not in the repository folder; run `cd path/to/jar`.
 - `zsh: command not found: jarvis`: activate the virtual environment and run `python3 -m pip install -e .` from the repository folder.
 
+## Terminal dashboard chat
+
+If you do not want to keep typing `jarvis --goal ...`, run Jarvis with no goal:
+
+```bash
+jarvis
+```
+
+That opens an interactive terminal dashboard where you can chat directly, review recent activity, inspect history, clear the session, and exit. Use `/no-model <task>` inside the dashboard when you want local planning/web-fetch testing without a cloud model call.
+
+GitHub Pages cannot directly access your Mac, local files, terminal, or personal browser because it is just a static web page running inside browser security limits. For computer access and task execution, run the local terminal dashboard from your cloned repository.
+
 ## Real model and task execution
 
 Jarvis can call cloud-hosted, OpenAI-compatible model endpoints when you configure them in `.env`. It does not ship with unlimited free compute: every real provider controls its own pricing, quotas, and rate limits. To use free-tier or open-source hosted models, add that provider's endpoint and API-key environment variable to `JARVIS_MODEL_ENDPOINTS`.

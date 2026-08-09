@@ -75,3 +75,22 @@ def test_extracts_openai_compatible_model_content() -> None:
     payload = {"choices": [{"message": {"content": "model answer"}}]}
 
     assert _extract_content(payload) == "model answer"
+
+
+def test_chat_session_tracks_history_and_activity(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from jarvis import session
+    from jarvis.agents import AgentOrchestrator
+    from jarvis.runner import ExecutionResult
+
+    def fake_run_sync(goal: str, config: JarvisConfig, use_model: bool = True, fetch_web: bool = True) -> ExecutionResult:
+        return ExecutionResult(plan=AgentOrchestrator().create_plan(goal), notes=["fake note"])
+
+    monkeypatch.setattr(session, "run_sync", fake_run_sync)
+    chat = session.ChatSession(config=JarvisConfig(workspace_roots=[tmp_path]))
+
+    reply = chat.submit("Research something", use_model=False)
+
+    assert "fake note" in reply
+    assert len(chat.history) == 2
+    assert len(chat.activities) == 2
+    assert "JARVIS TERMINAL DASHBOARD" in chat.render_dashboard()
