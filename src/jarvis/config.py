@@ -7,6 +7,19 @@ from pathlib import Path
 from typing import Any
 
 
+def _load_dotenv(path: Path = Path(".env")) -> None:
+    if not path.exists():
+        return
+    for raw_line in path.read_text().splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip("\"").strip("'")
+        os.environ.setdefault(key, value)
+
+
 @dataclass(frozen=True)
 class ModelEndpoint:
     """OpenAI-compatible cloud model endpoint."""
@@ -49,6 +62,7 @@ def _json_env(name: str, default: Any) -> Any:
 
 
 def load_config() -> JarvisConfig:
+    _load_dotenv()
     roots = os.getenv("JARVIS_WORKSPACE_ROOTS", os.getcwd()).split(os.pathsep)
     try:
         endpoint_data = _json_env("JARVIS_MODEL_ENDPOINTS", [])

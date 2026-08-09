@@ -34,3 +34,7 @@ def main() -> None:
     print(f"Action: {request.action}")
     print(f"Summary: {request.summary}")
     print(f"Token: {request.token}")
+
+
+if __name__ == "__main__":
+    main()

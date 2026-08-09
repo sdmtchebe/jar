@@ -24,6 +24,16 @@ cp .env.example .env
 jarvis --goal "Research a topic and draft a plan"
 ```
 
+If you already cloned the repository, skip `git clone ...` and `cd` into your existing checkout before running the remaining commands. If `python3` is unavailable, install Python 3.11 or newer first.
+
+### Common setup errors
+
+- `zsh: command not found: python`: use `python3` on macOS.
+- `source: no such file or directory: .venv/bin/activate`: create the virtual environment first with `python3 -m venv .venv`.
+- `does not appear to be a Python project`: you are not in the repository folder that contains `pyproject.toml`; run `cd path/to/jar`.
+- `cp: .env.example: No such file or directory`: you are not in the repository folder; run `cd path/to/jar`.
+- `zsh: command not found: jarvis`: activate the virtual environment and run `python3 -m pip install -e .` from the repository folder.
+
 ## Configuration
 
 Jarvis reads environment variables from the shell or a `.env` file:

@@ -35,3 +35,20 @@ def test_file_tool_rejects_paths_outside_workspace(tmp_path: Path) -> None:
 
     with pytest.raises(PermissionError):
         tool.plan_write_text(tmp_path / "blocked.txt", "nope")
+
+
+def test_load_config_reads_dotenv(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("JARVIS_REQUIRE_CONFIRMATION", raising=False)
+    monkeypatch.delenv("JARVIS_WORKSPACE_ROOTS", raising=False)
+    (tmp_path / ".env").write_text(
+        "JARVIS_REQUIRE_CONFIRMATION=false\n"
+        f"JARVIS_WORKSPACE_ROOTS={tmp_path}\n"
+    )
+
+    from jarvis.config import load_config
+
+    config = load_config()
+
+    assert config.require_confirmation is False
+    assert config.workspace_roots == [tmp_path.resolve()]
