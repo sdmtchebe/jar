@@ -36,6 +36,7 @@ def main() -> None:
         result = None
         plan = AgentOrchestrator().create_plan(args.goal)
 
+    plan = AgentOrchestrator().create_plan(args.goal)
     request = confirmations.request(
         "execute_plan",
         f"Execute {len(plan.tasks)} planned specialist-agent tasks for goal: {plan.goal}",
