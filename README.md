@@ -14,6 +14,10 @@ Jarvis is a human-confirmed AI operations assistant scaffold. It is designed to 
 - **Cloud model routing**: use remote OpenAI-compatible endpoints for open-source models; no local model runtime is required.
 - **Human confirmation**: risky actions are planned, summarized, and confirmed before execution.
 
+## Dashboard
+
+The GitHub Pages site is a dashboard prototype, not just a landing page. It includes a chat composer, a message history, activity tracking, visible metrics, and local browser storage so you can see what Jarvis planned or recorded during the session. The dashboard still follows the project safety model: it tracks plans and pauses before side effects need confirmation.
+
 ## Accessing Jarvis on GitHub vs running it on your Mac
 
 There are two different things you can do with this repository:
