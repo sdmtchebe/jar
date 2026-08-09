@@ -3,6 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jarvis Dashboard</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #060b16;
+        --panel: #0f172a;
+        --panel-2: #111c31;
+        --border: rgba(148, 163, 184, 0.22);
+        --text: #eef6ff;
+        --muted: #9fb4ce;
+        --accent: #38bdf8;
+        --accent-2: #a78bfa;
+        --success: #34d399;
+        --warn: #fbbf24;
+      }
+
+      * { box-sizing: border-box; }
     <title>Jarvis Assistant</title>
     <style>
       :root {
@@ -22,6 +39,210 @@
       body {
         margin: 0;
         min-height: 100vh;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(56, 189, 248, 0.22), transparent 30rem),
+          radial-gradient(circle at bottom right, rgba(167, 139, 250, 0.18), transparent 28rem),
+          var(--bg);
+        color: var(--text);
+      }
+
+      .app {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr) 360px;
+        gap: 1rem;
+        min-height: 100vh;
+        padding: 1rem;
+      }
+
+      .panel {
+        background: rgba(15, 23, 42, 0.86);
+        border: 1px solid var(--border);
+        border-radius: 1.25rem;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+      }
+
+      .sidebar, .activity { padding: 1.25rem; }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .orb {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow: 0 0 32px rgba(56, 189, 248, 0.45);
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+      h1 { font-size: 1.35rem; margin-bottom: 0.15rem; }
+      h2 { font-size: 1rem; }
+      p, li, small { color: var(--muted); line-height: 1.55; }
+
+      .status-card {
+        display: grid;
+        gap: 0.5rem;
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        width: fit-content;
+        border: 1px solid rgba(52, 211, 153, 0.36);
+        border-radius: 999px;
+        color: var(--success);
+        font-size: 0.82rem;
+        padding: 0.3rem 0.7rem;
+      }
+
+      .dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .nav-list, .timeline {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-list li {
+        border: 1px solid var(--border);
+        border-radius: 0.85rem;
+        margin-bottom: 0.6rem;
+        padding: 0.7rem;
+      }
+
+      .chat {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        overflow: hidden;
+      }
+
+      .chat-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.25rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .chat-log {
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+        overflow: auto;
+        padding: 1.25rem;
+      }
+
+      .message {
+        max-width: min(760px, 88%);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 0.9rem 1rem;
+        white-space: pre-wrap;
+      }
+
+      .message.jarvis {
+        align-self: flex-start;
+        background: rgba(17, 28, 49, 0.92);
+      }
+
+      .message.user {
+        align-self: flex-end;
+        background: rgba(56, 189, 248, 0.16);
+        border-color: rgba(56, 189, 248, 0.34);
+      }
+
+      .composer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.75rem;
+        padding: 1rem;
+        border-top: 1px solid var(--border);
+      }
+
+      textarea, button {
+        border: 1px solid var(--border);
+        border-radius: 0.9rem;
+        font: inherit;
+      }
+
+      textarea {
+        min-height: 3.2rem;
+        max-height: 9rem;
+        resize: vertical;
+        background: #0b1220;
+        color: var(--text);
+        padding: 0.9rem;
+      }
+
+      button {
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #03101f;
+        font-weight: 800;
+        padding: 0 1.25rem;
+      }
+
+      button.secondary {
+        background: transparent;
+        color: var(--text);
+        padding: 0.65rem 0.9rem;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .timeline li {
+        position: relative;
+        border-left: 2px solid rgba(56, 189, 248, 0.38);
+        padding: 0 0 0.85rem 0.9rem;
+      }
+
+      .timeline strong {
+        color: var(--text);
+        display: block;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        margin: 1rem 0;
+      }
+
+      .metric {
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 0.9rem;
+        padding: 0.9rem;
+      }
+
+      .metric b {
+        display: block;
+        font-size: 1.45rem;
+      }
+
+      @media (max-width: 1100px) {
+        .app { grid-template-columns: 1fr; }
+        .chat { min-height: 70vh; }
         font-family:
           Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
           "Segoe UI", sans-serif;
@@ -135,6 +356,139 @@
     </style>
   </head>
   <body>
+    <main class="app">
+      <aside class="panel sidebar" aria-label="Jarvis controls">
+        <div class="brand">
+          <div class="orb" aria-hidden="true"></div>
+          <div>
+            <h1>Jarvis</h1>
+            <small>Dashboard control center</small>
+          </div>
+        </div>
+        <section class="status-card">
+          <span class="pill"><span class="dot"></span>Awaiting your command</span>
+          <p>Chat with Jarvis, review its planned actions, and track everything it has done in the activity panel.</p>
+        </section>
+        <h2>Available workspaces</h2>
+        <ul class="nav-list">
+          <li>Web research and page review</li>
+          <li>Files inside approved folders</li>
+          <li>Email/SMS drafts pending approval</li>
+          <li>Google Docs project planning</li>
+        </ul>
+      </aside>
+
+      <section class="panel chat" aria-labelledby="chat-title">
+        <header class="chat-header">
+          <div>
+            <h2 id="chat-title">Chat with Jarvis</h2>
+            <small>Messages are stored in this browser for the dashboard prototype.</small>
+          </div>
+          <button class="secondary" id="clear-chat" type="button">Clear chat</button>
+        </header>
+        <div class="chat-log" id="chat-log" aria-live="polite"></div>
+        <form class="composer" id="chat-form">
+          <textarea id="prompt" name="prompt" placeholder="Ask Jarvis to research, plan, draft, or modify something..." required></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </section>
+
+      <aside class="panel activity" aria-labelledby="activity-title">
+        <h2 id="activity-title">Activity tracker</h2>
+        <p>Every chat request creates a visible audit entry so you can track what Jarvis did and what still needs confirmation.</p>
+        <div class="metrics">
+          <div class="metric"><b id="message-count">0</b><small>Messages</small></div>
+          <div class="metric"><b id="task-count">0</b><small>Tracked actions</small></div>
+        </div>
+        <button class="secondary" id="clear-activity" type="button">Clear activity</button>
+        <h3>What Jarvis did</h3>
+        <ol class="timeline" id="timeline"></ol>
+      </aside>
+    </main>
+
+    <script>
+      const chatLog = document.querySelector("#chat-log");
+      const timeline = document.querySelector("#timeline");
+      const messageCount = document.querySelector("#message-count");
+      const taskCount = document.querySelector("#task-count");
+      const promptInput = document.querySelector("#prompt");
+      const chatForm = document.querySelector("#chat-form");
+      const clearChat = document.querySelector("#clear-chat");
+      const clearActivity = document.querySelector("#clear-activity");
+
+      const store = {
+        messages: JSON.parse(localStorage.getItem("jarvis.messages") || "[]"),
+        activities: JSON.parse(localStorage.getItem("jarvis.activities") || "[]"),
+      };
+
+      function save() {
+        localStorage.setItem("jarvis.messages", JSON.stringify(store.messages));
+        localStorage.setItem("jarvis.activities", JSON.stringify(store.activities));
+      }
+
+      function render() {
+        chatLog.innerHTML = "";
+        store.messages.forEach((message) => {
+          const bubble = document.createElement("article");
+          bubble.className = `message ${message.role}`;
+          bubble.textContent = message.text;
+          chatLog.appendChild(bubble);
+        });
+        timeline.innerHTML = "";
+        store.activities.forEach((activity) => {
+          const item = document.createElement("li");
+          item.innerHTML = `<strong>${activity.title}</strong><small>${activity.time}</small><p>${activity.detail}</p>`;
+          timeline.appendChild(item);
+        });
+        messageCount.textContent = store.messages.length.toString();
+        taskCount.textContent = store.activities.length.toString();
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }
+
+      function jarvisReply(prompt) {
+        const lowered = prompt.toLowerCase();
+        const tasks = ["Create a plan", "Ask for missing details", "Wait for confirmation before side effects"];
+        if (lowered.includes("web") || lowered.includes("research")) tasks.push("Prepare web research steps");
+        if (lowered.includes("file") || lowered.includes("modify")) tasks.push("Prepare file changes inside approved folders");
+        if (lowered.includes("email") || lowered.includes("text")) tasks.push("Draft communication for approval");
+        return `I created a draft plan for: ${prompt}\n\nTracked steps:\n- ${tasks.join("\n- ")}\n\nBefore I execute anything risky, I will ask you to confirm.`;
+      }
+
+      chatForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const prompt = promptInput.value.trim();
+        if (!prompt) return;
+        const now = new Date().toLocaleString();
+        store.messages.push({ role: "user", text: prompt });
+        store.activities.unshift({ title: "User request received", time: now, detail: prompt });
+        const reply = jarvisReply(prompt);
+        store.messages.push({ role: "jarvis", text: reply });
+        store.activities.unshift({ title: "Jarvis plan created", time: now, detail: "Drafted a confirmable plan and paused before side effects." });
+        promptInput.value = "";
+        save();
+        render();
+      });
+
+      clearChat.addEventListener("click", () => {
+        store.messages = [];
+        save();
+        render();
+      });
+
+      clearActivity.addEventListener("click", () => {
+        store.activities = [];
+        save();
+        render();
+      });
+
+      if (store.messages.length === 0) {
+        store.messages.push({ role: "jarvis", text: "Hi, I am Jarvis. Tell me what you want done, and I will plan it, track it, and ask before taking action." });
+        store.activities.push({ title: "Dashboard opened", time: new Date().toLocaleString(), detail: "Jarvis is ready for a new instruction." });
+        save();
+      }
+
+      render();
+    </script>
     <main>
       <section class="hero" aria-labelledby="title">
         <div>
