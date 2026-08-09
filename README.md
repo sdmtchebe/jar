@@ -102,6 +102,29 @@ You should see project files such as `pyproject.toml`, `README.md`, `.env.exampl
 - `cp: .env.example: No such file or directory`: you are not in the repository folder; run `cd path/to/jar`.
 - `zsh: command not found: jarvis`: activate the virtual environment and run `python3 -m pip install -e .` from the repository folder.
 
+## Real model and task execution
+
+Jarvis can call cloud-hosted, OpenAI-compatible model endpoints when you configure them in `.env`. It does not ship with unlimited free compute: every real provider controls its own pricing, quotas, and rate limits. To use free-tier or open-source hosted models, add that provider's endpoint and API-key environment variable to `JARVIS_MODEL_ENDPOINTS`.
+
+Example `.env` shape:
+
+```bash
+JARVIS_MODEL_ENDPOINTS='[{"name":"open-router-free","base_url":"https://openrouter.ai/api/v1","model":"some/open-source-model:free","api_key_env":"OPENROUTER_API_KEY"}]'
+OPENROUTER_API_KEY="your-provider-key"
+```
+
+Run a real low-risk execution with:
+
+```bash
+jarvis --goal "Research https://example.com and summarize it" --execute
+```
+
+With `--execute`, Jarvis can fetch URLs found in the goal and pass the page preview into the configured cloud model. Side-effect tasks such as writing files, sending messages, or interacting with accounts still require explicit confirmation and provider integrations. If you want to test URL fetching without a model key, run:
+
+```bash
+jarvis --goal "Research https://example.com" --execute --no-model
+```
+
 ## Configuration
 
 Jarvis reads environment variables from the shell or a `.env` file:

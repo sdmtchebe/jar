@@ -52,3 +52,26 @@ def test_load_config_reads_dotenv(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
 
     assert config.require_confirmation is False
     assert config.workspace_roots == [tmp_path.resolve()]
+
+
+def test_runner_fetches_url_without_model(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from jarvis import runner
+
+    async def fake_fetch(url: str) -> str:
+        return "<html><title>Example</title></html>"
+
+    monkeypatch.setattr(runner.WebTool, "fetch", lambda self, url: fake_fetch(url))
+    config = JarvisConfig(workspace_roots=[tmp_path])
+
+    result = runner.run_sync("Research https://example.com", config, use_model=False)
+
+    assert result.fetched_pages["https://example.com"] == "<html><title>Example</title></html>"
+    assert result.notes == ["Fetched https://example.com (35 characters, first 4000 retained)."]
+
+
+def test_extracts_openai_compatible_model_content() -> None:
+    from jarvis.models import _extract_content
+
+    payload = {"choices": [{"message": {"content": "model answer"}}]}
+
+    assert _extract_content(payload) == "model answer"

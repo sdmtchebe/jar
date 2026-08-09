@@ -5,11 +5,22 @@ import argparse
 from .agents import AgentOrchestrator
 from .config import load_config
 from .confirmation import ConfirmationGate
+from .runner import run_sync
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Jarvis human-confirmed AI operations assistant")
     parser.add_argument("--goal", required=True, help="Goal Jarvis should plan")
+    parser.add_argument(
+        "--execute",
+        action="store_true",
+        help="Run low-risk execution: fetch URLs in the goal and call configured cloud model endpoints.",
+    )
+    parser.add_argument(
+        "--no-model",
+        action="store_true",
+        help="Skip cloud model calls and only create a plan/fetch URLs.",
+    )
     return parser
 
 
@@ -17,6 +28,14 @@ def main() -> None:
     args = build_parser().parse_args()
     config = load_config()
     confirmations = ConfirmationGate(required=config.require_confirmation)
+
+    if args.execute:
+        result = run_sync(args.goal, config, use_model=not args.no_model)
+        plan = result.plan
+    else:
+        result = None
+        plan = AgentOrchestrator().create_plan(args.goal)
+
     plan = AgentOrchestrator().create_plan(args.goal)
     request = confirmations.request(
         "execute_plan",
@@ -30,6 +49,17 @@ def main() -> None:
     print("\nQuestions before execution:")
     for question in plan.questions:
         print(f"- {question}")
+
+    if result is not None:
+        print("\nExecution notes:")
+        for note in result.notes or ["No low-risk actions were available to execute."]:
+            print(f"- {note}")
+        if result.model_response is not None:
+            print("\nCloud model response:")
+            print(f"Provider: {result.model_response.provider}")
+            print(f"Model: {result.model_response.model}")
+            print(result.model_response.content)
+
     print("\nConfirmation required:")
     print(f"Action: {request.action}")
     print(f"Summary: {request.summary}")
