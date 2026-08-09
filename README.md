@@ -102,6 +102,50 @@ You should see project files such as `pyproject.toml`, `README.md`, `.env.exampl
 - `cp: .env.example: No such file or directory`: you are not in the repository folder; run `cd path/to/jar`.
 - `zsh: command not found: jarvis`: activate the virtual environment and run `python3 -m pip install -e .` from the repository folder.
 
+## Adding your own API keys and models
+
+Jarvis reads model providers from `.env`. Do **not** paste API keys into GitHub, `README.md`, or committed code. Put the real secret only in your local `.env` file, which is ignored by Git.
+
+1. Copy the example file if you have not already:
+
+```bash
+cp .env.example .env
+```
+
+2. Open `.env` in a text editor and set `JARVIS_MODEL_ENDPOINTS`. Each endpoint needs:
+
+- `name`: a label you choose, such as `openrouter` or `together`.
+- `base_url`: the provider's OpenAI-compatible API base URL.
+- `model`: the exact model ID from that provider.
+- `api_key_env`: the name of the environment variable that contains the secret API key.
+
+Example:
+
+```bash
+JARVIS_MODEL_ENDPOINTS='[{"name":"openrouter","base_url":"https://openrouter.ai/api/v1","model":"meta-llama/llama-3.1-8b-instruct:free","api_key_env":"OPENROUTER_API_KEY"}]'
+OPENROUTER_API_KEY="replace-with-your-real-key"
+```
+
+3. To use multiple models/providers, add more objects to the JSON array. Jarvis tries them in order:
+
+```bash
+JARVIS_MODEL_ENDPOINTS='[{"name":"openrouter","base_url":"https://openrouter.ai/api/v1","model":"model-one","api_key_env":"OPENROUTER_API_KEY"},{"name":"together","base_url":"https://api.together.xyz/v1","model":"model-two","api_key_env":"TOGETHER_API_KEY"}]'
+OPENROUTER_API_KEY="replace-with-your-real-key"
+TOGETHER_API_KEY="replace-with-your-real-key"
+```
+
+4. Verify what Jarvis sees without printing your secret values:
+
+```bash
+jarvis --models
+```
+
+5. Run Jarvis with the configured model:
+
+```bash
+jarvis --goal "Research https://example.com and summarize it" --execute
+```
+
 ## Terminal dashboard chat
 
 If you do not want to keep typing `jarvis --goal ...`, run Jarvis with no goal:

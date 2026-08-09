@@ -28,12 +28,21 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Open the interactive terminal dashboard even if other flags are present.",
     )
+    parser.add_argument(
+        "--models",
+        action="store_true",
+        help="Print configured cloud model endpoints without showing secret key values.",
+    )
     return parser
 
 
 def main() -> None:
     args = build_parser().parse_args()
     config = load_config()
+
+    if args.models:
+        _print_models(config)
+        return
 
     if args.chat or not args.goal:
         run_terminal_dashboard(config)
@@ -76,6 +85,15 @@ def main() -> None:
     print(f"Action: {request.action}")
     print(f"Summary: {request.summary}")
     print(f"Token: {request.token}")
+
+
+def _print_models(config) -> None:
+    if not config.model_endpoints:
+        print("No model endpoints configured. Add JARVIS_MODEL_ENDPOINTS to .env.")
+        return
+    print("Configured model endpoints:")
+    for endpoint in config.model_endpoints:
+        print(f"- {endpoint.name}: {endpoint.model} at {endpoint.base_url} (key env: {endpoint.api_key_env})")
 
 
 if __name__ == "__main__":

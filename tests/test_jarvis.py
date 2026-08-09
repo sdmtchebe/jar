@@ -94,3 +94,19 @@ def test_chat_session_tracks_history_and_activity(monkeypatch: pytest.MonkeyPatc
     assert len(chat.history) == 2
     assert len(chat.activities) == 2
     assert "JARVIS TERMINAL DASHBOARD" in chat.render_dashboard()
+
+
+def test_load_config_reads_model_endpoint_from_dotenv(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("JARVIS_MODEL_ENDPOINTS", raising=False)
+    (tmp_path / ".env").write_text(
+        "JARVIS_MODEL_ENDPOINTS='[{\"name\":\"local-test\",\"base_url\":\"https://models.example/v1\",\"model\":\"test-model\",\"api_key_env\":\"TEST_KEY\"}]'\n"
+    )
+
+    from jarvis.config import load_config
+
+    config = load_config()
+
+    assert config.model_endpoints[0].name == "local-test"
+    assert config.model_endpoints[0].model == "test-model"
+    assert config.model_endpoints[0].api_key_env == "TEST_KEY"
