@@ -36,6 +36,10 @@ Jarvis reads environment variables from the shell or a `.env` file:
 | `JARVIS_EMAIL_PROVIDER` | Email adapter name, for example `smtp` or `gmail`. |
 | `JARVIS_SMS_PROVIDER` | SMS adapter name, for example `twilio`. |
 
+## GitHub Pages
+
+This repository includes both a root `index.html` and `docs/index.html` so GitHub Pages works whether the site source is configured as the repository root or the `/docs` folder. A lightweight `404.html` redirects unknown Pages routes back to the landing page.
+
 ## Safety model
 
 Jarvis intentionally refuses to bypass account security, exfiltrate secrets, persist without consent, or perform side effects without a confirmation token when confirmation is enabled.
