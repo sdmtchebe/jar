@@ -12,6 +12,7 @@ from .terminal import run_terminal_dashboard
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Jarvis human-confirmed AI operations assistant")
     parser.add_argument("--goal", help="Goal Jarvis should plan. Omit this to open the terminal dashboard.")
+    parser.add_argument("--goal", required=True, help="Goal Jarvis should plan")
     parser.add_argument(
         "--execute",
         action="store_true",
@@ -56,6 +57,7 @@ def main() -> None:
         result = None
         plan = AgentOrchestrator().create_plan(args.goal)
 
+    plan = AgentOrchestrator().create_plan(args.goal)
     request = confirmations.request(
         "execute_plan",
         f"Execute {len(plan.tasks)} planned specialist-agent tasks for goal: {plan.goal}",
