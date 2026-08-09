@@ -14,25 +14,12 @@ Jarvis is a human-confirmed AI operations assistant scaffold. It is designed to 
 - **Cloud model routing**: use remote OpenAI-compatible endpoints for open-source models; no local model runtime is required.
 - **Human confirmation**: risky actions are planned, summarized, and confirmed before execution.
 
-## Accessing Jarvis on GitHub vs running it on your Mac
-
-There are two different things you can do with this repository:
-
-1. **View the project on GitHub or GitHub Pages.** This only shows the files or static landing page in a browser. It does not install the `jarvis` command on your Mac.
-2. **Run Jarvis on your Mac.** For this, you need a local copy of the repository folder that contains `pyproject.toml`, `.env.example`, and `src/jarvis`. Clone or download the repository first, then run the Quick start commands from inside that folder.
-
-If you are currently at a terminal prompt like `~ %`, you are in your home folder, not necessarily inside the Jarvis project. Run `pwd` to see where you are and `cd path/to/jar` to enter the cloned repository before running `python3 -m pip install -e .`.
-
 ## Quick start
 
-Run these commands from the Jarvis project folder (the folder that contains `pyproject.toml`). On macOS, `python` is often not installed as a command name, so use `python3`.
-
 ```bash
-git clone <your-jarvis-repository-url>
-cd jar
-python3 -m venv .venv
+python -m venv .venv
 source .venv/bin/activate
-python3 -m pip install -e .
+pip install -e .
 cp .env.example .env
 jarvis --goal "Research a topic and draft a plan"
 ```
